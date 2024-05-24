@@ -6,7 +6,7 @@ import dataclasses
 import datetime
 import functools
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import uuid4
 
 import aiohttp
@@ -24,7 +24,7 @@ from pylav.constants.coordinates import REGION_TO_COUNTRY_COORDINATE_MAPPING
 from pylav.constants.node import GOOD_RESPONSE_RANGE, MAX_SUPPORTED_API_MAJOR_VERSION
 from pylav.constants.node_features import SUPPORTED_FEATURES, SUPPORTED_SOURCES
 from pylav.constants.regex import SEMANTIC_VERSIONING
-from pylav.events.api import LavalinkLoadtracksEvent
+from pylav.events.api import LavalinkLoadSearchEvent, LavalinkLoadtracksEvent
 from pylav.events.base import PyLavEvent
 from pylav.exceptions.request import HTTPException, UnauthorizedException
 from pylav.helpers.time import get_now_utc
@@ -32,6 +32,8 @@ from pylav.logging import getLogger
 from pylav.nodes.api.responses import rest_api
 from pylav.nodes.api.responses import websocket as websocket_responses
 from pylav.nodes.api.responses.errors import LavalinkError
+from pylav.nodes.api.responses.plugins import lyrics as lyrics_responses
+from pylav.nodes.api.responses.rest_api import PlaylistData
 from pylav.nodes.api.responses.route_planner import Status as RoutePlannerStart
 from pylav.nodes.api.responses.track import Track
 from pylav.nodes.utils import EMPTY_RESPONSE, Stats
@@ -43,6 +45,7 @@ from pylav.players.filters import (
     Equalizer,
     Karaoke,
     LowPass,
+    Reverb,
     Rotation,
     Timescale,
     Tremolo,
@@ -117,11 +120,19 @@ class Node:
         extras: dict = None,
         temporary: bool = False,
     ) -> None:
-        self._query_cls: Query = Query  # type: ignore
+        self._query_cls: type[Query] = Query
         self._version: Version | None = None
         self._api_version: int | None = None
         self._manager = manager
-        self._session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=120), json_serialize=json.dumps)
+        self._session = aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=120),
+            json_serialize=json.dumps,
+            headers={
+                "Authorization": password,
+                "Client-Name": f"PyLav/{self._manager.client.lib_version}",
+                "App-Id": self._manager.client._user_id,
+            },
+        )
         self._temporary = temporary
         if not temporary:
             # noinspection PyProtectedMember
@@ -550,8 +561,14 @@ class Node:
             self._filters.add(filterName)
         for plugin in info.plugins:
             match plugin.name:
-                case "SponsorBlock-Plugin":
+                case "sponsorblock-plugin":
                     self._capabilities.add("sponsorblock")
+                case "lavasearch-plugin":
+                    self._capabilities.add("lavasearch")
+                case "lavalyrics-plugin":
+                    self._capabilities.add("lavalyrics")
+                case "youtube-plugin":
+                    self._capabilities.add("youtube")
         if self.identifier in PYLAV_NODES:
             self._capabilities.discard("http")
             self._capabilities.discard("local")
@@ -910,6 +927,30 @@ class Node:
         """
         return self.has_capability("sponsorblock")
 
+    @property
+    def supports_lavasearch(self) -> bool:
+        """
+        Checks if the target node supports LavaSearch.
+
+        Returns
+        -------
+        :class:`bool`
+            True if the target node supports LavaSearch, False otherwise.
+        """
+        return self.has_capability("lavasearch")
+
+    @property
+    def supports_lavalyrics(self) -> bool:
+        """
+        Checks if the target node supports LavaLyrics.
+
+        Returns
+        -------
+        :class:`bool`
+            True if the target node supports LavaLyrics, False otherwise.
+        """
+        return self.has_capability("lavalyrics")
+
     async def close(self) -> None:
         """
         Closes the target node.
@@ -1029,6 +1070,10 @@ class Node:
         """Returns the loadtracks endpoint of the target node."""
         return self.base_api_url / "loadtracks"
 
+    def get_endpoint_loadseach(self) -> URL:
+        """Returns the loadsearch endpoint of the target node."""
+        return self.base_api_url / "loadsearch"
+
     def get_endpoint_decodetrack(self) -> URL:
         """Returns the decodetrack endpoint of the target node."""
         return self.base_api_url / "decodetrack"
@@ -1061,6 +1106,14 @@ class Node:
         """Returns the version endpoint of the target node."""
         return self.base_url / "version"
 
+    def get_endpoint_current_track_lyrics(self, guild_id: int) -> URL:
+        """Get current playing track lyrics."""
+        return self.get_endpoint_session_players() / f"{guild_id}" / "track" / "lyrics"
+
+    def get_lyrics(self):
+        """Get lyrics of the specified track."""
+        return self.base_api_url / "lyrics"
+
     # REST API - Direct calls
     async def fetch_session_players(self) -> list[rest_api.LavalinkPlayer] | HTTPException:
         """|coro|
@@ -1073,11 +1126,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_session_players(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1094,11 +1142,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_session_player_by_guild_id(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1117,11 +1160,6 @@ class Node:
         """
         async with self._session.patch(
             self.get_endpoint_session_player_by_guild_id(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"noReplace": "true" if no_replace else "false", "trace": "true" if self.trace else "false"},
             json=payload,
         ) as res:
@@ -1139,11 +1177,6 @@ class Node:
         """
         async with self._session.delete(
             self.get_endpoint_session_player_by_guild_id(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE or res.status in [404]:
@@ -1161,11 +1194,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_session_player_sponsorblock_categories(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
                 return await res.json(loads=json.loads)
@@ -1185,11 +1213,6 @@ class Node:
         """
         async with self._session.put(
             self.get_endpoint_session_player_sponsorblock_categories(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             json=categories,
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1208,11 +1231,6 @@ class Node:
         """
         async with self._session.delete(
             self.get_endpoint_session_player_sponsorblock_categories(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
                 return
@@ -1230,11 +1248,6 @@ class Node:
         """
         async with self._session.patch(
             self.get_endpoint_session(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             json=payload,
             params={"trace": "true" if self.trace else "false"},
         ) as res:
@@ -1255,12 +1268,7 @@ class Node:
 
         async with self._session.get(
             self.get_endpoint_loadtracks(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
-            params={"identifier": query.query_identifier, "trace": "true" if self.trace else "false"},
+            params={"identifier": query.query_identifier},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
                 result = await res.json(loads=json.loads)
@@ -1268,6 +1276,31 @@ class Node:
                 response = self.parse_loadtrack_response(result)
                 asyncio.create_task(self.node_manager.client.query_cache_manager.add_query(query, response))
                 self._manager.client.dispatch_event(LavalinkLoadtracksEvent(node=self, response=response))
+                return response
+            failure = from_dict(data_class=LavalinkError, data=await res.json(loads=json.loads))
+            if res.status in [401, 403]:
+                raise UnauthorizedException(failure)
+            self._logger.trace("Failed to load track: %d %s", failure.status, failure.message)
+            return HTTPException(failure)
+
+    async def fetch_loadsearch(
+        self, query: Query
+    ) -> rest_api.LoadSearchResponses | LavalinkError | HTTPException | None:
+        if not self.available or not self.has_source(query.requires_capability):
+            return None
+
+        async with self._session.get(
+            self.get_endpoint_loadseach(),
+            params={"query": query.query_identifier, "trace": "true" if self.trace else "false"},
+        ) as res:
+            if res.status in GOOD_RESPONSE_RANGE:
+                if res.status == 204:
+                    return None
+                result = await res.json(loads=json.loads)
+                self._logger.trace("Loaded Search Result: %s response: %s", query, result)
+                response = from_dict(data_class=rest_api.LoadSearchResponses, data=result)
+                asyncio.create_task(self.node_manager.client.query_cache_manager.add_query(query, response))
+                self._manager.client.dispatch_event(LavalinkLoadSearchEvent(node=self, response=response))
                 return response
             failure = from_dict(data_class=LavalinkError, data=await res.json(loads=json.loads))
             if res.status in [401, 403]:
@@ -1283,11 +1316,6 @@ class Node:
         """
         async with self._manager._client.cached_session.get(
             self.get_endpoint_decodetrack(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"encodedTrack": encoded_track, "trace": "true" if self.trace else "false"},
             timeout=timeout,
         ) as res:
@@ -1309,11 +1337,6 @@ class Node:
         """
         async with self._manager._client.cached_session.post(
             self.get_endpoint_decodetracks(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             json=encoded_tracks,
             params={"trace": "true" if self.trace else "false"},
         ) as res:
@@ -1333,11 +1356,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_info(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1363,11 +1381,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_stats(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1389,10 +1402,7 @@ class Node:
         async with self._session.get(
             self.get_endpoint_version(),
             headers={
-                "Authorization": self.password,
                 "Content-Type": "text/plain",
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
             },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
@@ -1416,11 +1426,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_routeplanner_status(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1440,11 +1445,6 @@ class Node:
         """
         async with self._session.post(
             self.get_endpoint_routeplanner_free_address(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             json={"address": address},
             params={"trace": "true" if self.trace else "false"},
         ) as res:
@@ -1462,11 +1462,6 @@ class Node:
         """
         async with self._session.post(
             self.get_endpoint_routeplanner_free_all(),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1475,6 +1470,53 @@ class Node:
             if res.status in [401, 403]:
                 raise UnauthorizedException(failure)
             self._logger.trace("Failed to free all routeplanner addresses: %d %s", failure.status, failure.message)
+            return HTTPException(failure)
+
+    async def fetch_current_lyrics(
+        self, guild_id: int, skipTrackSource: bool = False, raise_on_error: bool = False
+    ) -> lyrics_responses.LyricsObject | LavalinkError | HTTPException | None:
+        """|coro|
+        Fetches the lyrics for the current track from the target node.
+        """
+        async with self._session.get(
+            self.get_endpoint_current_track_lyrics(guild_id=guild_id),
+            params={
+                "trace": "true" if self.trace else "false",
+                "skipTrackSource": "true" if skipTrackSource else "false",
+            },
+        ) as res:
+            if res.status == 204:
+                return None
+            elif res.status in GOOD_RESPONSE_RANGE:
+                data = await res.json(loads=json.loads)
+                return from_dict(data_class=lyrics_responses.LyricsObject, data=data)
+            failure = from_dict(data_class=LavalinkError, data=await res.json(loads=json.loads))
+            if raise_on_error:
+                raise UnauthorizedException(failure)
+            return HTTPException(failure)
+
+    async def fetch_lyrics(
+        self, encodedTrack: str, skipTrackSource: bool = False, raise_on_error: bool = False
+    ) -> lyrics_responses.LyricsObject | LavalinkError | HTTPException | None:
+        """|coro|
+        Fetches the lyrics for the specified track.
+        """
+        async with self._session.get(
+            self.get_lyrics(),
+            params={
+                "trace": "true" if self.trace else "false",
+                "skipTrackSource": "true" if skipTrackSource else "false",
+                "track": encodedTrack,
+            },
+        ) as res:
+            if res.status == 204:
+                return None
+            elif res.status in GOOD_RESPONSE_RANGE:
+                data = await res.json(loads=json.loads)
+                return from_dict(data_class=lyrics_responses.LyricsObject, data=data)
+            failure = from_dict(data_class=LavalinkError, data=await res.json(loads=json.loads))
+            if raise_on_error:
+                raise UnauthorizedException(failure)
             return HTTPException(failure)
 
     # REST API - Wrappers
@@ -1499,11 +1541,6 @@ class Node:
         """
         async with self._session.get(
             self.get_endpoint_session_player_by_guild_id(guild_id=guild_id),
-            headers={
-                "Authorization": self.password,
-                "Client-Name": f"PyLav/{self.node_manager.client.lib_version}",
-                "App-Id": self.node_manager.client._user_id,
-            },
             params={"trace": "true" if self.trace else "false"},
         ) as res:
             if res.status in GOOD_RESPONSE_RANGE:
@@ -1561,6 +1598,51 @@ class Node:
                 case "playlist":
                     return rest_api.TrackResponse(loadType="track", data=response.data.tracks[0])
         return response
+
+    async def get_lavasearch_collection(
+        self,
+        query: Query,
+        bypass_cache: bool = False,
+        sleep: bool = False,
+        filter: Literal["tracks", "albums", "artists", "playlists"] | None = None,
+    ) -> rest_api.LoadSearchResponses | list[PlaylistData] | list[Track] | None:
+        """|coro|
+        Gets all tracks associated with the given query.
+
+        Parameters
+        ----------
+        query: :class:`Query`
+            The query to perform a search for.
+        filter: Optional[Literal["tracks" , "albums", "artists", "playlists"]]
+            Whether to filter the response to a specific type.
+        bypass_cache: :class:`bool`
+            Whether to bypass the cache.
+        sleep: :class:`bool`
+            Whether to sleep for 1 second before returning the response.
+        Returns
+        -------
+        Optional[rest_api.LoadSearchResponses | list[PlaylistData] | list[Track]]
+            Lavalink LoadSearch Response object
+        """
+        if not bypass_cache:
+            if cached_entry := await self.get_track_from_cache(query=query):
+                return cached_entry
+        response = await self.fetch_loadsearch(query=query)
+        if sleep:
+            await asyncio.sleep(0.05)
+        if isinstance(response, type(None)):
+            return
+        match filter:
+            case "tracks":
+                return response.tracks
+            case "albums":
+                return response.albums
+            case "artists":
+                return response.artists
+            case "playlists":
+                return response.playlists
+            case _:
+                return response
 
     async def search_youtube_music(self, query: str, bypass_cache: bool = False) -> rest_api.LoadTrackResponses:
         """|coro|
@@ -1716,6 +1798,25 @@ class Node:
         """
         return await self.get_track(await self._query_cls.from_string(query), bypass_cache=bypass_cache)
 
+    async def get_lavasearch(self, query: str, bypass_cache: bool = False) -> rest_api.LoadSearchResponses:
+        """|coro|
+        Gets the query from LavaSearch.
+        Parameters
+        ----------
+        query: :class:`str`
+            The query to search for.
+        bypass_cache: :class:`bool`
+            Whether to bypass the cache.
+
+        Returns
+        -------
+        LavalinkLoadSearchObjects
+            Lavalink LoadSearch Response Object
+        """
+        return await self.get_lavasearch_collection(
+            await self._query_cls.from_string(f"lavasearch:{query}"), bypass_cache=bypass_cache
+        )
+
     def get_filter_payload(
         self,
         *,
@@ -1732,7 +1833,7 @@ class Node:
         channel_mix: ChannelMix = None,
         reset_no_set: bool = False,
         reset: bool = False,
-        pluginFilters: dict[str, Echo | None] = None,
+        pluginFilters: dict[str, Echo | Reverb | None] = None,
     ) -> JSON_DICT_TYPE:
         """Gets the filter payload."""
         if reset:
@@ -1763,6 +1864,9 @@ class Node:
         if self.has_filter("echo"):
             echo = pluginFilters.get("echo")
             self._get_filter_payload_echo(echo, payload, player, reset_no_set)
+        if self.has_filter("reverb"):
+            reverb = pluginFilters.get("reverb")
+            self._get_filter_payload_reverb(reverb, payload, player, reset_no_set)
 
         return payload
 
@@ -1779,6 +1883,15 @@ class Node:
             payload["pluginFilters"]["echo"] = echo.get()
         elif not reset_no_set and player.echo:
             payload["pluginFilters"]["echo"] = player.echo.get()
+
+    @staticmethod
+    def _get_filter_payload_reverb(reverb: Reverb, payload: JSON_DICT_TYPE, player: Player, reset_no_set: bool) -> None:
+        if "pluginFilters" not in payload:
+            payload["pluginFilters"] = {}
+        if reverb:
+            payload["pluginFilters"]["revert"] = reverb.get()
+        elif not reset_no_set and player.reverb:
+            payload["pluginFilters"]["revert"] = player.reverb.get()
 
     @staticmethod
     def _get_filter_payload_channel_mix(

@@ -1,5 +1,110 @@
 # Changelog
 
+## v1.15.6 (23/05/2024)
+- [Disable emoji prefix](https://github.com/PyLav/PyLav/commit/f4a4246b0219d929a1b5c3160d89d6b5b9bf6b9d) - @Drapersniper
+- [Update PyLav track regex](https://github.com/PyLav/PyLav/commit/cf19ef6262ec3d4e8d4099dff4d68164a46dff07) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/cf9d7c70713b3baaeaff3a70697d92f48b216997) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/e31a1b62faa4d448db40727b61ed56675dffa108) - @crowdin-bot
+
+---
+
+## v1.15.5 (21/05/2024)
+- [Fix LavaLyrics implementation](https://github.com/PyLav/PyLav/commit/6268a6fc86b48d8ddc38a9d6e52ef5a0d7cb354f) - @Drapersniper
+- [Update PyLav Lavalink image reference](https://github.com/PyLav/PyLav/commit/8bf6955eab08ccf84e2e83c4547e9f9cb4030b71) - @Drapersniper
+
+---
+
+## v1.15.4 (21/05/2024)
+- [Plugin updates](https://github.com/PyLav/PyLav/commit/77d6d4ed26e7d6e232d60b67799fd0d4219b0870) - @Drapersniper
+- [Update docker-compose and pylav.docker.yaml to use the `/data` dir due to perms](https://github.com/PyLav/PyLav/commit/4658518a11bc6220991fd66ed77a05738557b21c) - @Drapersniper
+
+---
+
+## v1.15.3 (21/05/2024)
+- [Add source prefix to formatted track names](https://github.com/PyLav/PyLav/commit/010f3a482587922ac17fd032b0b38577db53f20e) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/8deb50e45b7c00b076c15ea14f7f464e6a761d2c) - @Drapersniper
+- [Bump crowdin/github-action from 1.20.2 to 1.20.4](https://github.com/PyLav/PyLav/commit/a893670bed4ab2fc6a4538f1636f9788d66f4ca9) - @dependabot[bot]
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/db2c3ea52422aa69e7db88509353ee4e89ed58f3) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/8d2ddccfaa18743ee081e7afe98d0513a9e21894) - @Drapersniper
+- [Bump actions/dependency-review-action from 3 to 4](https://github.com/PyLav/PyLav/commit/87fe480a8d94be7aef07771d849982e882cf0b3f) - @dependabot[bot]
+- [Bump actions/labeler from 4 to 5](https://github.com/PyLav/PyLav/commit/c8e628084dd146af926101b3ab5dca3186567bca) - @dependabot[bot]
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/0d42cb6f408122d75ae06b7275a1442e2581ba7f) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/9c2588165be85c1d8a3b67a9cfb736f2cbf149d9) - @Drapersniper
+- [Bump github/codeql-action from 2 to 3](https://github.com/PyLav/PyLav/commit/d78de7afc13bc3c1ff51bfa1aad14dbca89b2a6f) - @dependabot[bot]
+- [Bump pre-commit/action from 3.0.0 to 3.0.1](https://github.com/PyLav/PyLav/commit/870a72d8a4b26e31f2a5ebbd56ff63e8d426d242) - @dependabot[bot]
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/929bdf76a71979554b00089e3144cb3931bfc17d) - @Drapersniper
+- [Bump actions/checkout from 4.1.1 to 4.1.6](https://github.com/PyLav/PyLav/commit/989571a03fbec32ed76819aefb9c8bb56e415ddd) - @dependabot[bot]
+- [Update workflows](https://github.com/PyLav/PyLav/commit/ede9ff2f3941b380dc0747460cb69d77d1c0db7f) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/5c8528803cf4ad40c23e0eca5d9d2fdcaed879a1) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/9f78923551b23299d61154d2de6a48a9adf7d2e5) - @crowdin-bot
+
+---
+
+## v1.15.2 (19/05/2024)
+- [fix: TypeError: Player._set_filter_variables() missing 1 required positional argument: 'reverb'](https://github.com/PyLav/PyLav/commit/0678dcf1c3ac272ed7c122fba59f0368f11bdec2) - @Drapersniper
+- [Bump crowdin/github-action from 1.16.0 to 1.20.2 (#285)](https://github.com/PyLav/PyLav/commit/ea347e6cd0b66bc090138d0b4df78f8994f8d121) - @dependabot[bot]
+
+---
+
+## v1.15.1 (07/05/2024)
+- [fix: importlib.metadata](https://github.com/PyLav/PyLav/commit/0c8e7e62dbfbba2b56365e164712503af7e22ac5) - @Drapersniper
+- [dep: fix-shallow-repository](https://github.com/PyLav/PyLav/commit/6426f5a30710c589d2347e620f6040656542c47f) - @Drapersniper
+
+---
+
+## v1.15.0 (07/05/2024)
+- [Make PyLav v1.15 Release](https://github.com/PyLav/PyLav/commit/223b5c8ece9b94d63d63d8f8fa62d9b57aa8f31f) - @Drapersniper
+- [Bump actions/checkout from 4.1.0 to 4.1.1 (#270)](https://github.com/PyLav/PyLav/commit/ef9ca33653b7eb5c06e19300091ef5fe01a7c903) - @dependabot[bot]
+- [Bump actions/setup-node from 3 to 4 (#272)](https://github.com/PyLav/PyLav/commit/104170b26b2185d3fdc4257f56250a20a18d64ea) - @dependabot[bot]
+- [Bump stefanzweifel/git-auto-commit-action from 4.16.0 to 5.0.0 (#268)](https://github.com/PyLav/PyLav/commit/598647d6b1683ce6d88c51d2bab0fcdb1fcfcccb) - @dependabot[bot]
+- [Bump actions/github-script from 6 to 7 (#277)](https://github.com/PyLav/PyLav/commit/a1dd0e836f6e82e4dc7b1777ede0b15bce016459) - @dependabot[bot]
+- [Bump crowdin/github-action from 1.13.1 to 1.16.0 (#280)](https://github.com/PyLav/PyLav/commit/efa30e4bfaa7c51298e16e4d0cbd77e0c07462bd) - @dependabot[bot]
+
+---
+
+## v1.14.6 (18/04/2024)
+- [Make so writing to `pylav.yaml` is not mandatory](https://github.com/PyLav/PyLav/commit/3487e17b392dcb27cb2e60c39f4975c44aa0620b) - @Drapersniper
+- [Update SETUP.md](https://github.com/PyLav/PyLav/commit/60bf264cc6a7211cf2890916d047e0fc28f76b36) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/2576f66a389e7ed56dc5da8923310f555c8aa9c7) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/0c3601091f22875783dffbca6c97ffb95ec860ba) - @crowdin-bot
+
+---
+
+## v1.14.5 (17/04/2024)
+- [Fix AttributeError: 'NoneType' object has no attribute 'info' on deezer bundled playlist update](https://github.com/PyLav/PyLav/commit/610cb32e111eb34b4337e3dca0fbc9937b8e439e) - @Drapersniper
+
+---
+
+## v1.14.4 (17/04/2024)
+- [Dependency update](https://github.com/PyLav/PyLav/commit/6983aaa2a34cdf0b2e0559c36acede53378f7eb8) - @Drapersniper
+
+---
+
+## v1.14.3 (06/02/2024)
+- [Fix TypeError: 'NoneType' object is not subscriptable (seasw.)](https://github.com/PyLav/PyLav/commit/07bce4c136114be59678c14027e395e5684df9c7) - @Drapersniper
+
+---
+
+## v1.14.2 (29/01/2024)
+- [Fix Migrations](https://github.com/PyLav/PyLav/commit/f497cd76b319305e4afcec8ea8828c8a05d8de1d) - @Drapersniper
+- [No escaping bot activity strings (#282)](https://github.com/PyLav/PyLav/commit/6dadfdeffb9c4531b9ca4ce5605d6ceb67bf10ae) - @karlsbjorn
+
+---
+
+## v1.14.1 (26/01/2024)
+- [Make Release](https://github.com/PyLav/PyLav/commit/0339867097ac61d8d757347b225fe8ca9fe50fc3) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/55144776351f1be0a79d3213c8645013b21b2009) - @Drapersniper
+
+---
+
+## v1.14.0 (26/01/2024)
+- [PL 1.14](https://github.com/PyLav/PyLav/commit/d8dc138bf9d38b3d606e61f5ec025dc19417a124) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/1ce1bb26d7283c51f0f80e1f54015452be7427e4) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/3f8a5a756b1089a1a18f0893875bb1c54a39400a) - @crowdin-bot
+- [Add asyncio.timeouts on player restore to avoid the issue reported by life](https://github.com/PyLav/PyLav/commit/f33583edb99f313c04d654d916f5dc38b20e6c2b) - @Drapersniper
+
+---
+
 ## v1.13.3 (08/10/2023)
 - [Make Release](https://github.com/PyLav/PyLav/commit/6e60fa57c709f629b4bc285d6bbe106725faa526) - @Drapersniper
 - [Auto Merge](https://github.com/PyLav/PyLav/commit/836ca9dddc66e5c5f60c299afc2fe5b9bb1cf468) - @Drapersniper
@@ -710,99 +815,3 @@
 - [Add a workflow dispatch to PyLav-Cogs](https://github.com/Drapersniper/PyLav/commit/ad3b246c5d7c50eb821036ae20fbbc3bdfea6c25) - @Drapersniper
 - [fix versioning](https://github.com/Drapersniper/PyLav/commit/9683e6d8702b20e24a42dc517623d8c04c10cdcf) - @Drapersniper
 - [Sourcery](https://github.com/Drapersniper/PyLav/commit/9dc5bb339e1963f12a0c0860d89a98d3a4bc6f6a) - @Drapersniper
-
----
-
-## v1.0.2 (01/01/2023)
-- [Cleanup](https://github.com/Drapersniper/PyLav/commit/5b734b8408c159c38a09060aec991192a5f4b849) - @Drapersniper
-- [Cleanup](https://github.com/Drapersniper/PyLav/commit/bfa1d4f4e2d75b28444076a0030632bccf4785e8) - @Drapersniper
-- [Clarification in the SETUP.md](https://github.com/Drapersniper/PyLav/commit/950d642586a8188c07f0752e0ef9bb6d287460da) - @Drapersniper
-
----
-
-## v1.0.1 (01/01/2023)
-- [Properly parse applemusic and mixcloud queries](https://github.com/Drapersniper/PyLav/commit/e5beceed727b733bb497afef58fbb14ff65df5fe) - @Drapersniper
-- [Fix regex for Spotify, apple music, bandcamp and soundcloud](https://github.com/Drapersniper/PyLav/commit/ee915ea302c324ca899150e197b35a5b5d918e82) - @Drapersniper
-- [Some clarification of docker usage](https://github.com/Drapersniper/PyLav/commit/9810baa4807b50da70c86caee2f4ff439607e8fe) - @Drapersniper
-- [Add a mention to discord to use docker container](https://github.com/Drapersniper/PyLav/commit/20de69c33fce4ada25aadf0dff408870c3981564) - @Drapersniper
-- [add workflow_dispatch: to certain workflows](https://github.com/Drapersniper/PyLav/commit/ea99e761e98570fc719aa8c05202938b54e78f23) - @Drapersniper
-- [Fix crowdin workflows](https://github.com/Drapersniper/PyLav/commit/706c842847a6a9e4e363c67f6698f168e454bb1e) - @Drapersniper
-
----
-
-## v1.0.0 (30/12/2022)
-- [fix release.yml](https://github.com/Drapersniper/PyLav/commit/08d440d79eef207a6a92b6987f394069c01befff) - @Drapersniper
-- [reexport gren token](https://github.com/Drapersniper/PyLav/commit/81b453673c0171dec1c78043cf5733549fbf1311) - @Drapersniper
-- [force token](https://github.com/Drapersniper/PyLav/commit/79447bd5213fa365b5bbf0bfe5a8f892cb644577) - @Drapersniper
-- [reuse poetry cache on changelogs](https://github.com/Drapersniper/PyLav/commit/7d0509ad2c9e9d5611913f1b74c49d01b6dddcee) - @Drapersniper
-- [don't try to publish if already existing](https://github.com/Drapersniper/PyLav/commit/cefc3e668d2c5a422f0090934f9a3c22daa4bac9) - @Drapersniper
-- [Only run release on Ubuntu-latest for now](https://github.com/Drapersniper/PyLav/commit/b2ede0799801e78ad5289d43abe74c0362a72404) - @Drapersniper
-- [Fixes release workflow](https://github.com/Drapersniper/PyLav/commit/7f4e87597d5fb910fb7f283c37ff21abedbaa7d7) - @Drapersniper
-- [Fixes release workflow](https://github.com/Drapersniper/PyLav/commit/fa323e0d5b7c60634e337876759cf1c344720dd9) - @Drapersniper
-- [1 0 0](https://github.com/Drapersniper/PyLav/commit/2b2fac3f4f3da7b790af0728292554410eda00f3) - @Drapersniper
-
----
-
-## v0.11.20.0 (30/12/2022)
-- [[patch] make patch release](https://github.com/Drapersniper/PyLav/commit/a04b7ca0a694e5ce43abc01400e97af981acefbb) - @Drapersniper
-- [[patch] ignore unsupported lavalink releases (3.7+)](https://github.com/Drapersniper/PyLav/commit/2a236366ca4d439c60fd402c3a6b06f6d69a40c0) - @Drapersniper
-- [add labeler.yml](https://github.com/Drapersniper/PyLav/commit/b73b4636b5ea5377d4ebec031c2e90cbbe1ec3e1) - @Drapersniper
-- [Bump actions/dependency-review-action from 2 to 3](https://github.com/Drapersniper/PyLav/commit/e7ddb46c1ea723157b4ef38f4b4fc00b90948c8f) - @dependabot[bot]
-- [Bump crowdin/github-action from 1.5.0 to 1.5.1](https://github.com/Drapersniper/PyLav/commit/012e60dd64c02d05050067e4ef96bb9c46070b66) - @dependabot[bot]
-- [workflows](https://github.com/Drapersniper/PyLav/commit/b125e84e0f235fa8b0661834d91fa3ffac3455eb) - @Drapersniper
-
----
-
-## v0.11.19.1 (26/11/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/b6a70d2af59d3593532a89e2a3af705180151f24) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/170d8c09d834c952c5018e517ec877a96675929c) - @crowdin-bot
-
----
-
-## v0.11.19.0 (26/11/2022)
-- [[patch] Properly fix  NameError: name 'tables' is not defined](https://github.com/Drapersniper/PyLav/commit/ee9521e95e40a97245dab038634101e0359b866f) - @Drapersniper
-
----
-
-## v0.11.18.0 (25/11/2022)
-- [[patch] Fix an incorrect import usage](https://github.com/Drapersniper/PyLav/commit/af17f87cec7e776ae36b73bd81d5cc73ad0bf417) - @Drapersniper
-
----
-
-## v0.11.17.3 (24/11/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/7848668966b1a511d5648548dfac5d420969fde3) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/b6c434083bb4e50b1859870fba5bf6729a6ec06f) - @crowdin-bot
-
----
-
-## v0.11.17.2 (24/11/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/a6b80d71b39fc1527ea9a02ceeb30a823d10c74c) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/79efb5dbc975602675b8b5db4724bef94cb7b98f) - @crowdin-bot
-
----
-
-## v0.11.17.1 (23/11/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/72e281057e99ba376c3f42bf93e6ad18fac932ea) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/cf3f37148889129747a6216c1ef03bd63b041469) - @crowdin-bot
-
----
-
-## v0.11.17.0 (27/10/2022)
-- [[patch] Fix incorrect logic on local track folder names if a dot is used in the name](https://github.com/Drapersniper/PyLav/commit/fd889a5fa0b3e3adbc2f128804ae599e509915cd) - @Drapersniper
-
----
-
-## v0.11.16.1 (26/10/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/e587e80bda9a5a5fffa10b8b7b1a946346d012d4) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/ea26dd61811392afdb9cce16915db76a3b4fc6b5) - @crowdin-bot
-
----
-
-## v0.11.16.0 (26/10/2022)
-- [[patch] Consume Managed node pipe to avoid deadlocks](https://github.com/Drapersniper/PyLav/commit/64abbed223db2d052d33de09957ef2b12fd942da) - @Drapersniper
-
----
-
-## v0.11.15.1 (25/10/2022)
-- [[post] Add new translations](https://github.com/Drapersniper/PyLav/commit/197760bc34dc44c28b6f6d993cfdd63c4c599ada) - @Drapersniper
-- [[post] Update translations](https://github.com/Drapersniper/PyLav/commit/1af8f24bc806006706e43b98cfb471ca6d3cc343) - @crowdin-bot

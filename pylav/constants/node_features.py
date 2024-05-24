@@ -20,7 +20,7 @@ SUPPORTED_SEARCHES = {
 # noinspection SpellCheckingInspection
 SUPPORTED_SOURCES = {
     # https://github.com/lavalink-devs/Lavalink
-    "youtube",
+    # "youtube", # Depricated
     "soundcloud",
     "bandcamp",
     "twitch",
@@ -42,13 +42,20 @@ SUPPORTED_SOURCES = {
     "applemusic",
     "deezer",
     "yandexmusic",
+    "flowery-tts",
     # https://github.com/DuncteBot/tts-plugin
     "gcloud-tts",
+    # https://github.com/lavalink-devs/youtube-source,
+    "youtube",
 }
 
 SUPPORTED_FEATURES = {
     # https://github.com/topi314/Sponsorblock-Plugin
     "sponsorblock",
+    # https://github.com/topi314/LavaSearch
+    "lavasearch",
+    # https://github.com/topi314/LavaLyrics
+    "lavalyrics",
 }
 SUPPORTED_FILTERS = {
     "distortion",
@@ -59,6 +66,7 @@ SUPPORTED_FILTERS = {
     "timescale",
     "tremolo",
     "lowPass",
+    "reverb",
     "rotation",
     "channelMix",
     "vibrato",

@@ -29,16 +29,19 @@ NODE_DEFAULT_SETTINGS = {
     "lavalink": {
         "plugins": [
             {
-                "dependency": "com.github.topi314.lavasrc:lavasrc-plugin:4.0.0-beta.7",
-                "repository": "https://maven.topi.wtf/releases",
+                "dependency": "com.github.topi314.lavasrc:lavasrc-plugin:4.1.0",
             },
             {
-                "dependency": "com.dunctebot:skybot-lavalink-plugin:1.4.2",
-                "repository": "https://m2.duncte123.dev/releases",
+                "dependency": "com.github.topi314.sponsorblock:sponsorblock-plugin:3.0.0",
             },
             {
-                "dependency": "com.github.topi314.sponsorblock:sponsorblock-plugin:3.0.0-beta.3",
-                "repository": "https://maven.topi.wtf/releases",
+                "dependency": "com.dunctebot:skybot-lavalink-plugin:1.7.0",
+            },
+            {
+                "dependency": "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0",
+            },
+            {
+                "dependency": "dev.lavalink.youtube:youtube-plugin:1.3.0",
             },
             {"dependency": "me.rohank05:lavalink-filter-plugin:0.0.2", "repository": "https://jitpack.io"},
             {"dependency": "com.github.esmBot:lava-xm-plugin:v0.2.1", "repository": "https://jitpack.io"},
@@ -46,7 +49,7 @@ NODE_DEFAULT_SETTINGS = {
         "server": {
             "password": secrets.token_urlsafe(32),
             "sources": {
-                "youtube": True,
+                "youtube": False,
                 "bandcamp": True,
                 "soundcloud": True,
                 "twitch": True,
@@ -66,6 +69,7 @@ NODE_DEFAULT_SETTINGS = {
                 "channelMix": True,
                 "lowPass": True,
                 "echo": True,
+                "reverb": True,
             },
             "bufferDurationMs": 400,
             "frameBufferDurationMs": 1000,
@@ -85,10 +89,6 @@ NODE_DEFAULT_SETTINGS = {
                 "searchTriggersFail": True,
                 "retryLimit": -1,
             },
-            "youtubeConfig": {
-                "email": "",
-                "password": "",
-            },
             "httpConfig": {"proxyHost": "", "proxyPort": 0, "proxyUser": "", "proxyPassword": ""},
         },
     },
@@ -103,17 +103,37 @@ NODE_DEFAULT_SETTINGS = {
                 "ytsearch:%QUERY%",
                 "scsearch:%QUERY%",
             ],
-            "sources": {"spotify": False, "applemusic": True, "deezer": False, "yandexmusic": False},
+            "sources": {
+                "spotify": False,
+                "applemusic": False,
+                "deezer": False,
+                "yandexmusic": False,
+                "youtube": True,
+                "flowerytts": True,
+            },
             "spotify": {
                 "clientId": "",
                 "clientSecret": "",
                 "countryCode": "US",
                 "playlistLoadLimit": 110,
                 "albumLoadLimit": 220,
+                "spDc": "CHANGEME",
             },
-            "applemusic": {"countryCode": "US", "mediaAPIToken": None, "playlistLoadLimit": 30, "albumLoadLimit": 30},
+            "applemusic": {
+                "countryCode": "US",
+                "mediaAPIToken": "CHANGEME",
+                "playlistLoadLimit": 30,
+                "albumLoadLimit": 30,
+            },
             "deezer": {"masterDecryptionKey": ""},
             "yandexmusic": {"accessToken": ""},
+            "flowerytts": {"voice": "Airon", "translate": False, "silence": 0, "speed": 1.0, "audioFormat": "mp3"},
+            "youtube": {"countryCode": "US"},
+            "lyrics-sources": {
+                "spotify": False,
+                "deezer": True,
+                "youtube": True,
+            },
         },
         "dunctebot": {
             "ttsLanguage": "en-US",
@@ -128,6 +148,27 @@ NODE_DEFAULT_SETTINGS = {
                 "mixcloud": True,
                 "soundgasm": True,
             },
+        },
+        "youtube": {
+            "enabled": True,
+            "clients": [
+                "MUSIC",
+                "ANDROID",
+                "WEB",
+                "TVHTML5EMBEDDED",
+                "ANDROID_LITE",
+                "ANDROID_TESTSUITE",
+                "IOS",
+                "MEDIA_CONNECT",
+            ],
+            "allowSearch": True,
+            "allowDirectVideoIds": False,
+            "allowDirectPlaylistIds": False,
+            "WEB": {"playback": False},
+            "TVHTML5EMBEDDED": {"playlistLoading": False, "videoLoading": False, "searching": False},
+        },
+        "lavalyrics": {
+            "sources": ["youtube", "deezer"],
         },
     },
     "metrics": {"prometheus": {"enabled": False, "endpoint": "/metrics"}},

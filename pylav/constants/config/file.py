@@ -62,10 +62,6 @@ if (REDIS_FULL_ADDRESS_RESPONSE_CACHE := data.get("PYLAV__REDIS_FULL_ADDRESS_RES
     REDIS_FULL_ADDRESS_RESPONSE_CACHE = os.getenv("PYLAV__REDIS_FULL_ADDRESS_RESPONSE_CACHE")
     data_new["PYLAV__REDIS_FULL_ADDRESS_RESPONSE_CACHE"] = REDIS_FULL_ADDRESS_RESPONSE_CACHE
 
-if (USE_BUNDLED_EXTERNAL_PYLAV_NODE := data.get("PYLAV__USE_BUNDLED_EXTERNAL_PYLAV_NODE")) is None:
-    USE_BUNDLED_EXTERNAL_PYLAV_NODE = bool(int(os.getenv("PYLAV__USE_BUNDLED_EXTERNAL_PYLAV_NODE", "0")))
-    data_new["PYLAV__USE_BUNDLED_EXTERNAL_PYLAV_NODE"] = USE_BUNDLED_EXTERNAL_PYLAV_NODE
-
 if (READ_CACHING_ENABLED := data.get("PYLAV__READ_CACHING_ENABLED")) is None:
     READ_CACHING_ENABLED = bool(int(os.getenv("PYLAV__READ_CACHING_ENABLED", "0")))
     data_new["PYLAV__READ_CACHING_ENABLED"] = READ_CACHING_ENABLED
@@ -194,7 +190,7 @@ data_new = _remove_keys(
     data=data_new,
 )
 
-if DeepDiff(data, data_new, ignore_order=True, max_passes=2, cache_size=1000):
+if os.access(ENV_FILE, os.W_OK) and DeepDiff(data, data_new, ignore_order=True, max_passes=2, cache_size=1000):
     with ENV_FILE.open(mode="w") as file:
         LOGGER.info("Updating %s with the following content: %r", ENV_FILE, data_new)
         yaml.safe_dump(data_new, file, default_flow_style=False, sort_keys=False, encoding="utf-8")

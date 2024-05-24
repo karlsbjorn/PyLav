@@ -311,12 +311,13 @@ class PlayerController:
             return
         requester = self.client.bot.user
         try:
-            discord_player = await self.create(
-                channel=channel,
-                requester=requester,
-                feature=(await Query.from_base64(player_state.current["encoded"], lazy=True)).requires_capability,
-                self_deaf=player_state.self_deaf,
-            )
+            async with asyncio.timeout(10):
+                discord_player = await self.create(
+                    channel=channel,
+                    requester=requester,
+                    feature=(await Query.from_base64(player_state.current["encoded"], lazy=True)).requires_capability,
+                    self_deaf=player_state.self_deaf,
+                )
         except Exception:
             LOGGER.exception("Failed to restore player %s - %s", player_state.id, player_state.channel_id)
             raise
@@ -343,7 +344,9 @@ class PlayerController:
             activities = self.bot.guilds[0].me.activities
             activity = discord.utils.find(lambda a: a.type == discord.ActivityType.listening, activities)
             if playing_players > 1:
-                if (not activity) or f"Music in {playing_players} servers" not in activity.name:
+                if (not activity) or _("Music in {number_of_servers_variable_do_not_translate} servers").format(
+                    number_of_servers_variable_do_not_translate=playing_players
+                ) not in activity.name:
                     LOGGER.verbose("Updating bot activity to %s", f"Listening to Music in {playing_players} servers")
                     await self.bot.change_presence(
                         activity=discord.Activity(

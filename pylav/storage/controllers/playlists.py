@@ -84,7 +84,7 @@ class PlaylistController:
         playlists = await query
         if not playlists:
             raise EntryNotFoundException(
-                _("laylist with the name {playlist_name_variable_do_not_translate} was not found.").format(
+                _("Playlist with the name {playlist_name_variable_do_not_translate} was not found.").format(
                     playlist_name_variable_do_not_translate=playlist_name
                 )
             )
@@ -338,7 +338,12 @@ class PlaylistController:
 
             LOGGER.info("Finished updating bundled playlists")
 
-    async def _update_bundled_external_playlist(self, playlist_id, album_playlist, identifier, name, old_time_stamp):
+    async def _update_bundled_external_playlist(
+        self, playlist_id, album_playlist, identifier, name, old_time_stamp, retry: int = 0
+    ):
+        is_deezer = False
+        if retry > 3:
+            return
         if (playlist_id in BUNDLED_SPOTIFY_PLAYLIST_IDS and not self.client._spotify_auth) or (
             playlist_id in BUNDLED_DEEZER_PLAYLIST_IDS and not self.client._has_deezer_support
         ):
@@ -347,10 +352,12 @@ class PlaylistController:
             url = f"https://open.spotify.com/{album_playlist}/{identifier}"
         elif playlist_id in BUNDLED_DEEZER_PLAYLIST_IDS:
             url = f"https://www.deezer.com/en/{album_playlist}/{identifier}"
+            is_deezer = True
         else:
             LOGGER.debug("Unknown playlist id: %s", playlist_id)
             return
         tracks_raw = []
+        data = None
         try:
             LOGGER.info("Updating bundled external playlist - %s - %s", playlist_id, name)
             query = await Query.from_string(url)
@@ -362,8 +369,19 @@ class PlaylistController:
             )
             tracks_raw = data.data.tracks
         except Exception as exc:
-            LOGGER.error("Built-in external playlist couldn't be parsed - %s, report this error", name, exc_info=exc)
-            data = None
+            if (not data) and is_deezer:
+                await asyncio.sleep(1)
+                LOGGER.debug("Retrying Deezer playlist - %s (%s) (%s)", name, playlist_id, url)
+                await self._update_bundled_external_playlist(
+                    playlist_id, album_playlist, identifier, name, old_time_stamp, retry=retry + 1
+                )
+                return
+            else:
+                LOGGER.error(
+                    "Built-in external playlist couldn't be parsed - %s, report this error", name, exc_info=exc
+                )
+                LOGGER.debug("Built-in external playlist couldn't be parsed - %s (%r)", name, data, exc_info=exc)
+                data = None
         if not data:
             # noinspection PyProtectedMember
             await self.client._config.update_next_execution_update_bundled_external_playlists(old_time_stamp)
@@ -432,10 +450,11 @@ class PlaylistController:
             )
             LOGGER.info("Finished updating external playlists")
 
-    async def _update_external_playlist(self, playlist):
+    async def _update_external_playlist(self, playlist, retry: int = 0):
         name = await playlist.fetch_name()
         url = await playlist.fetch_url()
         query = await Query.from_string(url)
+        response = None
         try:
             LOGGER.info("Updating external playlist - %s (%s)", name, playlist.id)
             response: PlaylistResponse = await self.client.get_tracks(
@@ -450,6 +469,10 @@ class PlaylistController:
             if new_name and new_name != name:
                 await playlist.update_name(new_name)
         except Exception as exc:
+            if (not response) and query.is_deezer:
+                await asyncio.sleep(1)
+                await self._update_external_playlist(playlist, retry=retry + 1)
+                return
             LOGGER.error(
                 "External playlist couldn't be updated - %s (%s), report this error",
                 name,
