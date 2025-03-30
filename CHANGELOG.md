@@ -1,5 +1,56 @@
 # Changelog
 
+## v1.15.13 (03/07/2024)
+- [Hotfixes](https://github.com/PyLav/PyLav/commit/d377ce9d28a7457144dc58abd079d4ece30a86a1) - @Drapersniper
+
+---
+
+## v1.15.12 (22/06/2024)
+- [Update dependencies](https://github.com/PyLav/PyLav/commit/2dd93ecd23eb992dde75a06f3341afbc3c7bf384) - @Drapersniper
+- [Precommit checks only on PRs](https://github.com/PyLav/PyLav/commit/10690efe1fa81e495bfa39161aa116f9c0bae062) - @Drapersniper
+
+---
+
+## v1.15.11 (18/06/2024)
+- [Hotfix for v1.15.10, ensuring youtube urls are actually functional](https://github.com/PyLav/PyLav/commit/31c78caced7c334456e6563882ce9a936d423609) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/3c53b6618107a238f0fd0a2f40f49d56a27cbe49) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/cba495b832abd86806c82eba8a9c5a12f587e8ba) - @crowdin-bot
+- [Update dependencies and formatting](https://github.com/PyLav/PyLav/commit/fe9a8857914703f871c18b2f323c616e5dc1fa8e) - @Drapersniper
+
+---
+
+## v1.15.10 (18/06/2024)
+- [Fix URL Matching for youtube URLs](https://github.com/PyLav/PyLav/commit/acea10152f2a4e267e423f52aea9c64bba082752) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/9058d20200666279b8a3e8b96468e57b11b44ad8) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/be134621125a5627e669a22ec6fb157b4c44c205) - @crowdin-bot
+
+---
+
+## v1.15.9 (15/06/2024)
+- [Allows bots in PyLav server to display emojis](https://github.com/PyLav/PyLav/commit/02ce652eea9825810363d05d8bfcff253ca87ba4) - @Drapersniper
+
+---
+
+## v1.15.8 (15/06/2024)
+- [Fix volume fallbacks to never return None](https://github.com/PyLav/PyLav/commit/786376218471de399a1b1f3f4adfc2247b85e47d) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/c1dcf1b818488cbb71367cb216af2257f5b59f0a) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/b2f58ad0d411df0c89baa4a78d2fc079e8914c80) - @crowdin-bot
+
+---
+
+## v1.15.7 (14/06/2024)
+- [Fix: '<' not supported between instances of 'int' and 'NoneType'](https://github.com/PyLav/PyLav/commit/2cf84a1d0c161f90e880efabe05cee0de1abc97d) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/3627088fb74734307bbc3a2f361661845d7086f3) - @Drapersniper
+- [Bump actions/checkout from 4.1.6 to 4.1.7](https://github.com/PyLav/PyLav/commit/8411f78f28ca9120ebc6289d928ce7be5d31df78) - @dependabot[bot]
+- [Update plugin version](https://github.com/PyLav/PyLav/commit/b8103a4e64a5c3762e5255d5e28f3186bcf5ef57) - @Drapersniper
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/0efa1d8fdaa1b4e284baace358010b986af607cb) - @Drapersniper
+- [Bump crowdin/github-action from 1.20.4 to 2.0.0](https://github.com/PyLav/PyLav/commit/436b0888ffba0c5302805f2befdc98457dc597f4) - @dependabot[bot]
+- [Bump requests from 2.31.0 to 2.32.0 (#302)](https://github.com/PyLav/PyLav/commit/e20e493974a3112e72478b59b430e7fee5847fbe) - @dependabot[bot]
+- [Auto Merge](https://github.com/PyLav/PyLav/commit/4c1c16546e6f6d9aca83ebcb76552f2dfd4068b6) - @Drapersniper
+- [New Crowdin translations by GitHub Action](https://github.com/PyLav/PyLav/commit/79c8c0b5905f09a16035471640e76b27e4076bc0) - @crowdin-bot
+
+---
+
 ## v1.15.6 (23/05/2024)
 - [Disable emoji prefix](https://github.com/PyLav/PyLav/commit/f4a4246b0219d929a1b5c3160d89d6b5b9bf6b9d) - @Drapersniper
 - [Update PyLav track regex](https://github.com/PyLav/PyLav/commit/cf19ef6262ec3d4e8d4099dff4d68164a46dff07) - @Drapersniper
@@ -767,51 +818,3 @@
 
 ## v1.0.10 (02/01/2023)
 - [Make sure name attribute can exist before accessing it](https://github.com/Drapersniper/PyLav/commit/037e0c4f0a93acbc7c4642e22f899bd99e7c70c0) - @Drapersniper
-
----
-
-## v1.0.9 (02/01/2023)
-- [default the PyLav external node to off](https://github.com/Drapersniper/PyLav/commit/7217d3bf68a385ca5c8d5f591395c29531f9eed1) - @Drapersniper
-
----
-
-## v1.0.8 (02/01/2023)
-- [fix to avoid the local database being constantly wiped](https://github.com/Drapersniper/PyLav/commit/dba0dcadf21c91fe1b8fa7fd2a72e60cdee5d598) - @Drapersniper
-- [Remove `lava.link` bundled node permanently](https://github.com/Drapersniper/PyLav/commit/d7f201297e56f91faff0842541c8e92265bba56a) - @Drapersniper
-- [make the redbot container depend on the postgres and ll-node containers](https://github.com/Drapersniper/PyLav/commit/d6ac80a1c309e0619431b01b54f43d8268bc478f) - @Drapersniper
-- [Dependency update and cleanup](https://github.com/Drapersniper/PyLav/commit/7a51c40100e734aa151ea72e5751a39317fb47b6) - @Drapersniper
-
----
-
-## v1.0.7 (02/01/2023)
-
-
----
-
-## v1.0.6 (02/01/2023)
-## What's Changed
-* New Crowdin translations by Github Action by @Drapersniper in https://github.com/Drapersniper/PyLav/pull/132
-
-
-**Full Changelog**: https://github.com/Drapersniper/PyLav/compare/v1.0.4...v1.0.6
----
-
-## v1.0.5 (02/01/2023)
-- [delete empty queries in cache](https://github.com/Drapersniper/PyLav/commit/9e70abea40b967950b7fb2129502d423697ed8cd) - @Drapersniper
-- [Only return cached entry if there are tracks to be returned](https://github.com/Drapersniper/PyLav/commit/e10369fa5549217c2e8e54f0a616de1b7e93a5b4) - @Drapersniper
-- [Add a note to the the setup.md](https://github.com/Drapersniper/PyLav/commit/e38ba1089c3960ac846b982b125a804fa0ea31ad) - @Drapersniper
-
----
-
-## v1.0.4 (01/01/2023)
-- [Add the youtube email config option](https://github.com/Drapersniper/PyLav/commit/7f98770f7ad81e73a476c82b749755e172a613cd) - @Drapersniper
-- [Expose the dispatch manager attribute of pylav](https://github.com/Drapersniper/PyLav/commit/d2aecaafeb483a83f3218175d84f7264f8a73726) - @Drapersniper
-- [Better documentation](https://github.com/Drapersniper/PyLav/commit/b5ee42b0552b7f362e52777e8c0fa30934738331) - @Drapersniper
-- [Ignore DB connection errors on tasks](https://github.com/Drapersniper/PyLav/commit/bcc35de6beea4558e3d631a7c731b288b2c1c682) - @Drapersniper
-
----
-
-## v1.0.3 (01/01/2023)
-- [Add a workflow dispatch to PyLav-Cogs](https://github.com/Drapersniper/PyLav/commit/ad3b246c5d7c50eb821036ae20fbbc3bdfea6c25) - @Drapersniper
-- [fix versioning](https://github.com/Drapersniper/PyLav/commit/9683e6d8702b20e24a42dc517623d8c04c10cdcf) - @Drapersniper
-- [Sourcery](https://github.com/Drapersniper/PyLav/commit/9dc5bb339e1963f12a0c0860d89a98d3a4bc6f6a) - @Drapersniper
