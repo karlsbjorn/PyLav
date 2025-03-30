@@ -281,9 +281,9 @@ class Client(metaclass=SingletonClass):
             return
         LOGGER.debug("Shard %s resumed, checking for affected players", shard_id)
         players = filter(lambda p: p.guild.shard_id == shard_id, self.player_manager.players.copy().values())
-        for player in players:
-            await self.set_context_locale(player.guild)
-            await player.reconnect()
+        # for player in players:
+        #     await self.set_context_locale(player.guild)
+        #     await player.reconnect()
 
     async def on_pylav_shard_ready(self, shard_id: int) -> None:
         """Handle shard ready events."""
@@ -291,9 +291,9 @@ class Client(metaclass=SingletonClass):
             return
         LOGGER.debug("Shard %s ready, checking for affected players", shard_id)
         players = filter(lambda p: p.guild.shard_id == shard_id, self.player_manager.players.copy().values())
-        for player in players:
-            await self.set_context_locale(player.guild)
-            await player.reconnect()
+        # for player in players:
+        #     await self.set_context_locale(player.guild)
+        #     await player.reconnect()
 
     async def on_pylav_resumed(self) -> None:
         """Handle resume events."""
@@ -301,18 +301,18 @@ class Client(metaclass=SingletonClass):
             return
         LOGGER.debug("Resumed, checking for affected players")
 
-        for player in self.player_manager.players.values():
-            await self.set_context_locale(player.guild)
-            await player.reconnect()
+        # for player in self.player_manager.players.values():
+        #     await self.set_context_locale(player.guild)
+        #     await player.reconnect()
 
     async def on_pylav_ready(self) -> None:
         """Handle ready events."""
         if self._shutting_down or not self.initialized:
             return
         LOGGER.debug("Ready, checking for affected players")
-        for player in self.player_manager.players.values():
-            await self.set_context_locale(player.guild)
-            await player.reconnect()
+        # for player in self.player_manager.players.values():
+        #     await self.set_context_locale(player.guild)
+        #     await player.reconnect()
 
     async def wait_until_ready(self, timeout: float | None = None) -> None:
         """Wait until the client is ready to use."""
