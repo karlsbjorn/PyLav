@@ -1076,7 +1076,7 @@ class Player(VoiceProtocol):
                 existing_session.voice.sessionId != self._voice_state["sessionId"]
                 or existing_session.voice.token != self._voice_state["token"]
                 or existing_session.voice.endpoint != self._voice_state["endpoint"]
-                or existing_session.voice.channel_id != self._voice_state["channelId"]
+                or existing_session.voice.channelId != self._voice_state["channelId"]
             ):
                 await self.node.patch_session_player(self.guild.id, payload={"voice": self._voice_state})
             self._waiting_for_node.set()
