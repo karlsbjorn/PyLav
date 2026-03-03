@@ -142,19 +142,22 @@ class VoiceState:
     token: str
     endpoint: str
     sessionId: str
+    channelId: str
 
     def to_dict(self) -> JSON_DICT_TYPE:
         return {
             "token": self.token,
             "endpoint": self.endpoint,
             "sessionId": self.sessionId,
+            "channelId": self.channelId,
         }
 
     def __repr__(self) -> str:
         return (
             f"<VoiceStateObject(token={'OBFUSCATED' if self.token else None} "
             f"endpoint={self.endpoint} "
-            f"sessionId={self.sessionId})"
+            f"sessionId={self.sessionId} "
+            f"channelId={self.channelId})"
         )
 
 
