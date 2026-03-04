@@ -21,9 +21,9 @@ jobs:
         runs-on: ${{ matrix.os }}
         steps:
         -   name: Checkout code
-            uses: actions/checkout@v4.1.7
+            uses: actions/checkout@v6.0.2
         -   name: Set up Python
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v6
             with:
                 python-version: ${{ matrix.python-version }}
         -   if: ${{ runner.os == 'Windows' }}
@@ -63,12 +63,12 @@ jobs:
         runs-on: [ubuntu-latest]
         steps:
         -   name: Checkout
-            uses: actions/checkout@v4.1.7
+            uses: actions/checkout@v6.0.2
             with:
                 fetch-depth: 0
                 ref: develop
         -   name: Set up Python 3.11
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v6
             with:
                 python-version: '3.11'
         -   name: Install Poetry
@@ -76,7 +76,7 @@ jobs:
         -   name: Install Poetry Dynamic-Versioning
             run: poetry self add "poetry-dynamic-versioning[plugin]"
         -   name: Install Node.js 14
-            uses: actions/setup-node@v4
+            uses: actions/setup-node@v6
             with:
                 node-version: '14'
         -   name: Install GitHub Release Notes
@@ -86,7 +86,7 @@ jobs:
                 gren release --token ${{ secrets.PERSONAL_ACCESS_TOKEN }}
                 gren changelog --token ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         -   name: Import GPG key
-            uses: crazy-max/ghaction-import-gpg@v6
+            uses: crazy-max/ghaction-import-gpg@v7
             with:
                 gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
                 git_user_signingkey: true
@@ -100,7 +100,7 @@ jobs:
             run: |
                 echo version="$(poetry version --short)" >> $GITHUB_OUTPUT
         -   name: Git Auto Commit
-            uses: stefanzweifel/git-auto-commit-action@v5.0.1
+            uses: stefanzweifel/git-auto-commit-action@v7.1.0
             with:
                 commit_message: '[skip ci] Update CHANGELOG.md and Release Notes for v${{steps.get-version.outputs.version}}'
                 commit_options: -S

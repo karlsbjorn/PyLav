@@ -12,12 +12,12 @@ jobs:
         name: Pre-commit fixes
         runs-on: [ubuntu-latest]
         steps:
-        -   uses: actions/checkout@v4.1.7
-        -   uses: actions/setup-python@v5
+        -   uses: actions/checkout@v6.0.2
+        -   uses: actions/setup-python@v6
             with:
                 python-version: '3.11'
         -   uses: pre-commit/action@v3.0.1
             env:
                 SKIP: sourcery,interrogate
-        -   uses: pre-commit-ci/lite-action@v1.0.2
+        -   uses: pre-commit-ci/lite-action@v1.1.0
             if: always()

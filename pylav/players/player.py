@@ -268,7 +268,7 @@ class Player(VoiceProtocol):
     def add_voice_to_payload(self, payload: JSON_DICT_TYPE) -> JSON_DICT_TYPE:
         if not payload:
             payload = {}
-        if {"sessionId", "token", "endpoint"} == self._voice_state.keys():
+        if {"sessionId", "token", "endpoint", "channelId"} == self._voice_state.keys():
             payload["voice"] = self._voice_state
         return payload
 
@@ -1053,6 +1053,7 @@ class Player(VoiceProtocol):
         if not self.channel_id:  # We're disconnecting
             await self.disconnect(force=True, requester=self.guild.me)
             return
+        self._voice_state.update({"channelId": data["channel_id"]})
         if self.channel_id != int(self.channel_id):
             self.channel = self.guild.get_channel(int(self.channel_id))
 
@@ -1068,13 +1069,14 @@ class Player(VoiceProtocol):
         await self._dispatch_voice_update()
 
     async def _dispatch_voice_update(self) -> None:
-        if {"sessionId", "token", "endpoint"} == self._voice_state.keys():
+        if {"sessionId", "token", "endpoint", "channelId"} == self._voice_state.keys():
             existing_session = await self.fetch_node_player()
 
             if isinstance(existing_session, HTTPException) or (
                 existing_session.voice.sessionId != self._voice_state["sessionId"]
                 or existing_session.voice.token != self._voice_state["token"]
                 or existing_session.voice.endpoint != self._voice_state["endpoint"]
+                or existing_session.voice.channelId != self._voice_state["channelId"]
             ):
                 await self.node.patch_session_player(self.guild.id, payload={"voice": self._voice_state})
             self._waiting_for_node.set()
